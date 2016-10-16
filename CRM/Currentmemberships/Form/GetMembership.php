@@ -14,14 +14,14 @@ class CRM_Currentmemberships_Form_GetMembership extends CRM_Core_Form {
     $this->add(
       'text', // field type
       'start_date', // field name
-      'Start from date', // field label
+      'Start from date (YYYY-MM-DD)', // field label
        FALSE // is required
     );
 
     $this->add(
         'text',
         'end_date',
-        'Start To Date',
+        'Start to date (YYYY-MM-DD)',
          False
     );
     $this->addButtons(array(
