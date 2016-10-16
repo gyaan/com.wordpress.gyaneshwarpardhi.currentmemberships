@@ -34,7 +34,7 @@ class CRM_Currentmemberships_Form_GetMembership extends CRM_Core_Form {
 
     // export form elements
     $this->assign('elementNames', $this->getRenderableElementNames());
-    $this->assign('membership',$this->membership_get_example());
+    $this->assign('membership',$this->getMembership());
     parent::buildQuickForm();
   }
 
@@ -46,11 +46,10 @@ class CRM_Currentmemberships_Form_GetMembership extends CRM_Core_Form {
     )));
 
     $params = array();
-
     if(!empty($values['start_date']) && !empty($values['end_date']))
     $params = array('start_date' => array(">="=>$values['start_date']), 'start_date' => array("<="=>$values['end_date']));
 
-    $this->assign('membership',$this->membership_get_example($params));
+    $this->assign('membership',$this->getMembership($params));
     parent::postProcess();
   }
 
@@ -77,7 +76,7 @@ class CRM_Currentmemberships_Form_GetMembership extends CRM_Core_Form {
   }
 
 
-  function membership_get_example($params=array())
+  function getMembership($params=array())
   {
     try {
       $result = civicrm_api3('membership', 'get', $params);
