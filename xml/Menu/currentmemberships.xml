@@ -2,8 +2,8 @@
 <menu>
   <item>
     <path>civicrm/membership</path>
-    <page_callback>CRM_Currentmemberships_Page_Membership</page_callback>
-    <title>Membership</title>
+    <page_callback>CRM_Currentmemberships_Form_GetMembership</page_callback>
+    <title>GetMembership</title>
     <access_arguments>access CiviCRM</access_arguments>
   </item>
 </menu>
