@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <extension key="com.wordpress.gyaneshwarpardhi.currentmemberships" type="module">
   <file>currentmemberships</file>
-  <name>FIXME</name>
-  <description>FIXME</description>
+  <name>Current Membership</name>
+  <description>Displays a list of the current memberships</description>
   <license>AGPL-3.0</license>
   <maintainer>
-    <author>gyaneshwar</author>
-    <email>gyaneshwarp@valyoo.in</email>
+    <author>Gyaneshwar Pardhi</author>
+    <email>gyaan1334@gmail.com</email>
   </maintainer>
   <urls>
     <url desc="Main Extension Page">http://FIXME</url>
