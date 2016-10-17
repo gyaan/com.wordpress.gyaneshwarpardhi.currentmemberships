@@ -141,12 +141,12 @@ function currentmemberships_civicrm_preProcess($formName, &$form) {
  * Implements hook_civicrm_navigationMenu().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_navigationMenu
- *
+ */
 function currentmemberships_civicrm_navigationMenu(&$menu) {
   _currentmemberships_civix_insert_navigation_menu($menu, NULL, array(
-    'label' => ts('The Page', array('domain' => 'com.wordpress.gyaneshwarpardhi.currentmemberships')),
-    'name' => 'the_page',
-    'url' => 'civicrm/the-page',
+    'label' => ts('Get membership', array('domain' => 'com.wordpress.gyaneshwarpardhi.currentmemberships')),
+    'name' => 'Get membership',
+    'url' => 'civicrm/membership',
     'permission' => 'access CiviReport,access CiviContribute',
     'operator' => 'OR',
     'separator' => 0,
