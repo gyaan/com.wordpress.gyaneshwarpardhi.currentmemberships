@@ -7,86 +7,116 @@ require_once 'CRM/Core/Form.php';
  *
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC43/QuickForm+Reference
  */
-class CRM_Currentmemberships_Form_GetMembership extends CRM_Core_Form {
-  public function buildQuickForm() {
+class CRM_Currentmemberships_Form_GetMembership extends CRM_Core_Form
+{
+    /**
+     * create the form elements
+     */
+    public function buildQuickForm()
+    {
 
-    // add form elements
-    $this->add(
-      'text', // field type
-      'start_date', // field name
-      'Start from date (YYYY-MM-DD)', // field label
-       FALSE // is required
-    );
+        // add form elements
+        $this->add(
+            'datepicker', // field type
+            'start_from_date', // field name
+            'Start from date', // field label
+            FALSE // is required
+        );
 
-    $this->add(
-        'text',
-        'end_date',
-        'Start to date (YYYY-MM-DD)',
-         False
-    );
-    $this->addButtons(array(
-      array(
-        'type' => 'submit',
-        'name' => ts('Submit'),
-        'isDefault' => TRUE,
-      ),
-    ));
+        $this->add(
+            'datepicker',
+            'start_to_date',
+            'Start to date',
+            FALSE
 
-    // export form elements
-    $this->assign('elementNames', $this->getRenderableElementNames());
-    $this->assign('membership',$this->getMembership());
-    parent::buildQuickForm();
-  }
+        );
 
-  public function postProcess() {
-    $values = $this->exportValues();
-    CRM_Core_Session::setStatus(ts('You picked start date from "%1 to %2"', array(
-      1 => $values['start_date'],
-      2 => $values['end_date']
-    )));
+        $this->addButtons(array(
+            array(
+                'type' => 'submit',
+                'name' => ts('Submit'),
+                'isDefault' => TRUE,
+            ),
+        ));
 
-    $params = array();
-    if(!empty($values['start_date']) && !empty($values['end_date']))
-    $params = array('start_date' => array(">="=>$values['start_date']), 'start_date' => array("<="=>$values['end_date']));
-
-    $this->assign('membership',$this->getMembership($params));
-    parent::postProcess();
-  }
-
-
-  /**
-   * Get the fields/elements defined in this form.
-   *
-   * @return array (string)
-   */
-  public function getRenderableElementNames() {
-    // The _elements list includes some items which should not be
-    // auto-rendered in the loop -- such as "qfKey" and "buttons".  These
-    // items don't have labels.  We'll identify renderable by filtering on
-    // the 'label'.
-    $elementNames = array();
-    foreach ($this->_elements as $element) {
-      /** @var HTML_QuickForm_Element $element */
-      $label = $element->getLabel();
-      if (!empty($label)) {
-        $elementNames[] = $element->getName();
-      }
+        // export form elements
+        $this->assign('elementNames', $this->getRenderableElementNames());
+        $this->assign('membership', $this->getMembership());
+        parent::buildQuickForm();
     }
-    return $elementNames;
-  }
 
+    /**
+     * function to process the form element
+     */
+    public function postProcess()
+    {
+        //get the form values
+        $values = $this->exportValues();
+        $params = array();
 
-  function getMembership($params=array())
-  {
-    try {
-      $result = civicrm_api3('membership', 'get', $params);
-    } catch (CiviCRM_API3_Exception $e) {
-      // handle error here
-      $errorMessage = $e->getMessage();
-      $errorCode = $e->getErrorCode();
-      $errorData = $e->getExtraParams();
-      return array('error' => $errorMessage, 'error_code' => $errorCode, 'error_data' => $errorData);
+        //if there is the date filter
+        if (!empty($values['start_from_date']) && !empty($values['start_to_date'])) {
+            CRM_Core_Session::setStatus(ts('You picked start date from "%1 to %2"', array(
+                1 => $values['start_from_date'],
+                2 => $values['start_to_date']
+            )));
+
+            //create the where condtion
+            $params = array('start_date' => array(">=" => $values['start_from_date']), 'start_date' => array("<=" => $values['start_to_date']));
+
+            //get the from and to date diff
+            $diff = strtotime($values['start_to_date']) - strtotime($values['start_from_date']);
+
+            //if to date is greater then from date then display alert message
+            if ($diff < 0) {
+                CRM_Core_Session::setStatus(ts('Picked start date from should less then start date to.:' . $diff));
+                $params = array(); //get all the result
+            }
+        }
+
+        $this->assign('membership', $this->getMembership($params));
+        parent::postProcess();
     }
-    return $result;
-  }
+
+
+    /**
+     * Get the fields/elements defined in this form.
+     *
+     * @return array (string)
+     */
+    public function getRenderableElementNames()
+    {
+        // The _elements list includes some items which should not be
+        // auto-rendered in the loop -- such as "qfKey" and "buttons".  These
+        // items don't have labels.  We'll identify renderable by filtering on
+        // the 'label'.
+        $elementNames = array();
+        foreach ($this->_elements as $element) {
+            /** @var HTML_QuickForm_Element $element */
+            $label = $element->getLabel();
+            if (!empty($label)) {
+                $elementNames[] = $element->getName();
+            }
+        }
+        return $elementNames;
+    }
+
+
+    /**
+     * @param array $params : array of where condition
+     * @return array of membership details
+     */
+    function getMembership($params = array())
+    {
+        try {
+            $result = civicrm_api3('membership', 'get', $params);
+        } catch (CiviCRM_API3_Exception $e) {
+            // handle error here
+            $errorMessage = $e->getMessage();
+            $errorCode = $e->getErrorCode();
+            $errorData = $e->getExtraParams();
+            return array('error' => $errorMessage, 'error_code' => $errorCode, 'error_data' => $errorData);
+        }
+        return $result;
+    }
 }
