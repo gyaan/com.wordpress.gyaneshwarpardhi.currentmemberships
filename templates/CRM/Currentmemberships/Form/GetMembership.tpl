@@ -9,7 +9,7 @@
     {include file="CRM/common/formButtons.tpl" location="bottom"}
 </div>
 <div class="clear"></div>
-<P><b>Total Number of membership:</b> {$membership.count}</P>
+<P><b>Membership Details:</b></P>
 <table class="sticky-enabled table-select-processed tableheader-processed sticky-table">
     <thead>
     <tr>
