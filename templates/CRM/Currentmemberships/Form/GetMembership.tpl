@@ -33,13 +33,13 @@
             </td>
             <td>{$v.membership_name}</td>
             <td>{$v.relationship_name}</td>
-            <td>{$v.join_date}</td>
-            <td>{$v.start_date}</td>
-            <td>{$v.end_date}</td>
+            <td>{$v.join_date|date_format}</td>
+            <td>{$v.start_date|date_format}</td>
+            <td>{$v.end_date|date_format}</td>
             <td>{$v.source}</td>
             <td>{$v.status_id}</td>
-            <td>{$v.is_test}</td>
-            <td>{$v.is_pay_later}</td>
+            <td>{if $v.is_test eq 1} Yes {else} No {/if}</td>
+            <td>{if $v.is_pay_later eq 1} Yes {else} No {/if}</td>
         </tr>
     {/foreach}
     </tbody>
