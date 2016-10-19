@@ -14,30 +14,10 @@ class CRM_Currentmemberships_Form_GetMembership extends CRM_Core_Form
      */
     public function buildQuickForm()
     {
-
         // add form elements
-        $this->add(
-            'datepicker', // field type
-            'start_from_date', // field name
-            'Start from date', // field label
-            FALSE // is required
-        );
-
-        $this->add(
-            'datepicker',
-            'start_to_date',
-            'Start to date',
-            FALSE
-
-        );
-
-        $this->addButtons(array(
-            array(
-                'type' => 'submit',
-                'name' => ts('Submit'),
-                'isDefault' => TRUE,
-            ),
-        ));
+        $this->add('datepicker', 'start_from_date', 'Start from date', FALSE);
+        $this->add('datepicker', 'start_to_date', 'Start to date', FALSE);
+        $this->addButtons(array(array('type' => 'submit', 'name' => ts('Submit'), 'isDefault' => TRUE,)));
 
         // export form elements
         $this->assign('elementNames', $this->getRenderableElementNames());
@@ -109,7 +89,15 @@ class CRM_Currentmemberships_Form_GetMembership extends CRM_Core_Form
     function getMembership($params = array())
     {
         try {
-            $result = civicrm_api3('membership', 'get', $params);
+            $params['api.Contact.getsingle']= array('id' => "\$value.contact_id");
+            $membershipDetails = civicrm_api3('Membership', 'get',  $params);
+            foreach($membershipDetails['values'] as $key => $membership){ //just form the array index to access in the smarty
+                $membership['api_Contact_getsingle'] = $membership['api.Contact.getsingle'];
+                unset($membership['api.Contact.getsingle']);
+                $membershipDetails['values'][$key]=$membership;
+            }
+            return $membershipDetails;
+
         } catch (CiviCRM_API3_Exception $e) {
             // handle error here
             $errorMessage = $e->getMessage();
@@ -117,6 +105,6 @@ class CRM_Currentmemberships_Form_GetMembership extends CRM_Core_Form
             $errorData = $e->getExtraParams();
             return array('error' => $errorMessage, 'error_code' => $errorCode, 'error_data' => $errorData);
         }
-        return $result;
+        return array();
     }
 }
